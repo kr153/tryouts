@@ -1,0 +1,17 @@
+
+DIM ROOT_DIR 
+ROOT_DIR = "AngularJS\"
+
+function ui()
+	response.open( ROOT_DIR & "index.htm")
+	response.close()
+end function
+
+function getSum()
+	a = request.get("a")
+	b = request.get("b")
+	os = response.open(ROOT_DIR & "\json\json.json")
+	ss = response.set("$sum" , (CInt(a) + CInt(b)))
+	response.close()
+end function
+
