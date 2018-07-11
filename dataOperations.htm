@@ -2,15 +2,15 @@
 <html>
     <head>
         <title>Angualar JS</title>
-        <script src='angular.min.js'></script>
+        <script src='js/angular.js'></script>
         <script>
             var app = angular.module('app',[]);
-            
+
             // simple data
             app.controller('simpleData' , ['$scope', function(s){
                 s.a = 11;
             }]);
-            
+
             // data operation
             app.controller('dataOperation' , ['$scope', function(o) {
                 o.a = 1;
@@ -21,27 +21,34 @@
             app.controller('dataInput' , ['$scope', function(i) {
                 i.a = 0;
                 i.b = 0;
-            }])
+            }]);
+
+
 
 
         </script>
         <body ng-app='app'>
+
             <div ng-controller='simpleData'>
                 simpleData <br>
                 a  = {{a}}
             </div>
+
             <hr>
+
             <div ng-controller='dataOperation'>
                 data operation <br>
                 a + b = {{a + b}}
             </div>
+
             <hr>
+
             <div ng-controller="dataInput">
                 dataInput<br>
                 sum of <input type='text' ng-model="a"> and <input type="text" ng-model="b">
-                is {{a + b}}
-
+                is {{+a + +b}} <!-- +a means m is now a digit -->
             </div>
+
         </body>
     </head>
 </html>

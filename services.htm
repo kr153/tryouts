@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ng services</title>
+    <script src="js/angular.js"></script>
+
+    <script>
+
+        window.onload = init;
+        function init(){
+
+
+            document.querySelector("#item").addEventListener("click" , function(){alert('clic was cicked !')})
+
+        }
+
+        var app = angular.module('app', []);
+
+        app.controller('dataDivFactory' , ['$scope', 'myFactory', function(f, myFactory){
+            f.a = 1;
+            f.b = 2;
+            f.doSum = function(){
+
+                f.sum = myFactory.getSumAPI(f.a , f.b, function(r){
+                    f.sum = r.sum;
+                });
+            }
+        }]);
+
+        app.factory('myFactory', ['$http', function($http){
+            console.log('factory inst...')
+            var myFactoryObj = {};
+
+            myFactoryObj.getSum = function(a,b){
+                return parseInt(a) + parseInt(b);
+            }
+
+            myFactoryObj.getSumAPI = function(a,b,cb){
+                $http({
+                    url:'http://127.0.0.1:9090/AngularJS/test.xbs?getSum()&a='+ a +'&b='+b,
+                    method:'GET'
+                }).then(function(resp){
+                   cb(resp.data)
+                },function(resp){
+                    console.log(resp.data)
+                })
+
+            }
+
+            return myFactoryObj;
+        }]);
+
+        app.service('myService', ['$http' , function($http){
+            console.log('myService inst...')
+            this.getSumS = function(x,y,cb){
+                $http({
+                    url:'http://127.0.0.1:9090/AngularJS/test.xbs?getSum()&a='+ x +'&b='+y,
+                    method:'GET'
+                }).then(function(resp){
+                   cb(resp.data)
+                },function(resp){
+                    console.log(resp.data)
+                })
+            }
+        }]);
+
+        app.controller('dataDivService' , ['$scope', 'myService', function(s, myService){
+            s.x = 1;
+            s.y = 2;
+            s.doSumS = function(){
+                myService.getSumS(s.x , s.y, function(ret){
+                    s.sumS = ret.sum
+                });
+            }
+        }]);
+
+
+
+
+
+    </script>
+</head>
+
+
+<body ng-app="app">
+    <br>
+    factory
+    <br>
+
+    <div ng-controller="dataDivFactory">
+        sum of <input type="text" ng-model="a"> and <input type="text" ng-model="b"> is {{sum}}
+        <button ng-click="doSum()">calc</button>
+    </div>
+    <br>
+    services
+    <br>
+    <div ng-controller="dataDivService">
+        sum of <input type="text" ng-model="x"> and <input type="text" ng-model="y"> is {{sumS}}
+        <button ng-click="doSumS()">calc</button>
+    </div>
+
+    <button id="item" >clic</button>
+</body>
+</html>
